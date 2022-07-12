@@ -30,11 +30,18 @@ builder.Services.AddIdentity<AppUser, AppRole>(opt =>
         opt.User.RequireUniqueEmail = true; // eşşiz Email sahip olmalıdır
         opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";//kullanıcı adında kullanabilecek karakterler
 
-    }).AddPasswordValidator<CustomPasswordValidator>()
+    })
+    .AddPasswordValidator<CustomPasswordValidator>()
     .AddUserValidator<CustomUserValidator>()
+    .AddErrorDescriber<CustomIdentityErrorDescriber>()
     .AddEntityFrameworkStores<IdentityDbContext>();
+
+
 //.AddPasswordValidator<CustomPasswordValidator>() kişisel parola kontrol mekanizması
 //.AddUserValidator<CustomUserValidator>() kişisel kullanıcı adı kontrol mekanizması
+//.AddErrorDescriber<CustomIdentityErrorDescriber>() error mesajlarını türkçeleştirme işlemi
+
+
 
 var app = builder.Build();
 
