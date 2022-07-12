@@ -23,7 +23,6 @@ builder.Services.AddDbContext<IdentityDbContext>(a =>
 CookieBuilder cookieBuilder = new CookieBuilder();
 cookieBuilder.Name = "MyBlog";
 cookieBuilder.HttpOnly = true;
-cookieBuilder.Expiration = TimeSpan.FromDays(60);
 cookieBuilder.SameSite = SameSiteMode.Lax; // hangi siteden kaydedilsiyse o site üzerinden gelmez
 //cookieBuilder.SameSite = SameSiteMode.Strict;// hangi siteden kaydedilsiyse o site üzerinden gelir
 cookieBuilder.SecurePolicy = CookieSecurePolicy.SameAsRequest;//sadece https istek üzerinden gonderilmesini sağlar
@@ -36,6 +35,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = new PathString("");
     options.Cookie = cookieBuilder;
     options.SlidingExpiration = false; // belirlenen sürenin yarısına gelindiğinde süreyi belirtilen süre kadar uzatır.
+    options.ExpireTimeSpan = TimeSpan.FromDays(60);
 });
 #endregion
 

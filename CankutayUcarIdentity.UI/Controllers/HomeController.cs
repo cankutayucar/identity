@@ -10,10 +10,11 @@ namespace CankutayUcarIdentity.UI.Controllers
     public class HomeController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
-
-        public HomeController(UserManager<AppUser> userManager)
+        private readonly SignInManager<AppUser> _signInManager;
+        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
@@ -22,9 +23,35 @@ namespace CankutayUcarIdentity.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult SignIn()
+        public IActionResult Login()
         {
             //üye girişi get
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
+        {
+            //üye girişi post
+            if (ModelState.IsValid)
+            {
+                AppUser user = await _userManager.FindByEmailAsync(loginViewModel.Email);
+                if (user != null)
+                {
+                    //_signInManager.SignOutAsync() sistemde bir cookie bilgisi var ve login olunmuşşsa cookie silinir sistemden çıkış yapılır
+                    await _signInManager.SignOutAsync();
+
+
+                    //_signInManager.PasswordSignInAsync() email adresiyle bulunan userdaki hashli passwordu ve gelen vievmodeldeki paswordu hashleyerek kontrol eder ve beni hatırla seçeneğini kontrol eder ve sisteme girişin kilitli olup olmadığını kontrol eder
+                    Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Member");
+                    }
+                }
+                ModelState.AddModelError("", "Geçersiz kullanıcı adı veya şifre");
+            }
             return View();
         }
 
@@ -47,8 +74,9 @@ namespace CankutayUcarIdentity.UI.Controllers
                     PhoneNumber = userViewModel.PhoneNumber,
                     Email = userViewModel.Email
                 };
+                //_userManager.CreateAsync yeni bir kullanıcı ekleme Methodu
                 var result = await _userManager.CreateAsync(user, userViewModel.Password);
-                if (result.Succeeded) RedirectToAction("SignIn");
+                if (result.Succeeded) return RedirectToAction("Login", "Home");
                 foreach (var identityError in result.Errors)
                 {
                     ModelState.AddModelError("", identityError.Description);

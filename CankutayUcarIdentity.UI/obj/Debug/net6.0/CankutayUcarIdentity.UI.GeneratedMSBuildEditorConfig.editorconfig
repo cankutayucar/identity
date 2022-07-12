@@ -19,12 +19,16 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Home/SignIn.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTaWduSW4uY3NodG1s
+[C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Home/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Home/SignUp.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTaWduVXAuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Member/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Shared/_Layout.cshtml]
