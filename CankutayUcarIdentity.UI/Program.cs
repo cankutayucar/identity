@@ -35,6 +35,13 @@ builder.Services.AddIdentity<AppUser, AppRole>(opt =>
         opt.User.RequireUniqueEmail = true; // eşşiz Email sahip olmalıdır
         opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";//kullanıcı adında kullanabilecek karakterler
 
+        //opt.Lockout = new LockoutOptions()
+        //{
+        //    AllowedForNewUsers = true, // yeni kullanıcılar için etkinleştirilsinmi
+        //    DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5), // 5 dakika kitli olsun
+        //    MaxFailedAccessAttempts = 5   // maksimum 5 yanlış girişte
+        //}
+        // default hesap kilitleme mekanizmasını değiştirme
     })
     .AddPasswordValidator<CustomPasswordValidator>()
     .AddUserValidator<CustomUserValidator>()

@@ -19,6 +19,12 @@ namespace CankutayUcarIdentity.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
+            //_userManager.IsLockedOutAsync() kullanıcı kilitlimi değilmi ona bakakar true veya false dondurur
+            //_userManager.AccessFailedAsync() kullanıcının başarısız giriş sayısını 1 arttırır
+            //_userManager.ResetAccessFailedCountAsync() kullanıcının başarısız girişlerini sıfırlar
+            //_userManager.SetLockoutEndDateAsync() kullanıcı kaç dakika kitlenecek
+            //_userManager.GetAccessFailedCountAsync() kullanıcının başarısız giriş sayısını verir
+
             return View();
         }
 
@@ -39,6 +45,11 @@ namespace CankutayUcarIdentity.UI.Controllers
                 AppUser user = await _userManager.FindByEmailAsync(loginViewModel.Email);
                 if (user != null)
                 {
+                    if (await _userManager.IsLockedOutAsync(user))
+                    {
+                        ModelState.AddModelError("", "Hesabınız Kilitlenmiştir.");
+                        return View(loginViewModel);
+                    }
                     //_signInManager.SignOutAsync() sistemde bir cookie bilgisi var ve login olunmuşşsa cookie silinir sistemden çıkış yapılır
                     await _signInManager.SignOutAsync();
 
@@ -48,14 +59,30 @@ namespace CankutayUcarIdentity.UI.Controllers
 
                     if (result.Succeeded)
                     {
+                        await _userManager.ResetAccessFailedCountAsync(user);
                         if (TempData["ReturnUrl"] != null)
                         {
                             return RedirectToAction(TempData["ReturnUrl"].ToString());
                         }
                         return RedirectToAction("Index", "Member");
                     }
+                    else
+                    {
+                        await _userManager.AccessFailedAsync(user);
+                        int failCount = await _userManager.GetAccessFailedCountAsync(user);
+                        ModelState.AddModelError("", $"{failCount} . başasırız giriş");
+                        if (failCount > 3)
+                        {
+                            await _userManager.SetLockoutEndDateAsync(user,
+                                new DateTimeOffset(DateTime.Now.AddMinutes(20)));
+                            ModelState.AddModelError("", "Hesabınız 20 dakikalığına kilitlenmiştir.");
+                        }
+                    }
                 }
-                ModelState.AddModelError("", "Geçersiz kullanıcı adı veya şifre");
+                else
+                {
+                    ModelState.AddModelError("", "Geçersiz kullanıcı adı veya şifre");
+                }
             }
             return View(loginViewModel);
         }
