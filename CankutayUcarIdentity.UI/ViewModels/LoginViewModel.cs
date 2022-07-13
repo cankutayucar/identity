@@ -14,5 +14,7 @@ namespace CankutayUcarIdentity.UI.ViewModels
         [Display(Name = "Şifre")]
         [MinLength(4, ErrorMessage = "şifre en az 4 karakterli olmalıdır")]
         public string Password { get; set; }
+
+        public bool RememberMe { get; set; }
     }
 }

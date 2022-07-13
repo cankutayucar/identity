@@ -23,8 +23,9 @@ namespace CankutayUcarIdentity.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
+            TempData["ReturnUrl"] = returnUrl;
             //üye girişi get
             return View();
         }
@@ -43,16 +44,20 @@ namespace CankutayUcarIdentity.UI.Controllers
 
 
                     //_signInManager.PasswordSignInAsync() email adresiyle bulunan userdaki hashli passwordu ve gelen vievmodeldeki paswordu hashleyerek kontrol eder ve beni hatırla seçeneğini kontrol eder ve sisteme girişin kilitli olup olmadığını kontrol eder
-                    Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
+                    Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, false);
 
                     if (result.Succeeded)
                     {
+                        if (TempData["ReturnUrl"] != null)
+                        {
+                            return RedirectToAction(TempData["ReturnUrl"].ToString());
+                        }
                         return RedirectToAction("Index", "Member");
                     }
                 }
                 ModelState.AddModelError("", "Geçersiz kullanıcı adı veya şifre");
             }
-            return View();
+            return View(loginViewModel);
         }
 
         [HttpGet]

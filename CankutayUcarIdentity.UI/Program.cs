@@ -19,26 +19,6 @@ builder.Services.AddDbContext<IdentityDbContext>(a =>
 
 #endregion
 
-#region cookie ayarları
-CookieBuilder cookieBuilder = new CookieBuilder();
-cookieBuilder.Name = "MyBlog";
-cookieBuilder.HttpOnly = true;
-cookieBuilder.SameSite = SameSiteMode.Lax; // hangi siteden kaydedilsiyse o site üzerinden gelmez
-//cookieBuilder.SameSite = SameSiteMode.Strict;// hangi siteden kaydedilsiyse o site üzerinden gelir
-cookieBuilder.SecurePolicy = CookieSecurePolicy.SameAsRequest;//sadece https istek üzerinden gonderilmesini sağlar
-
-
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = new PathString("/Home/Login");
-    options.LogoutPath = new PathString("/Home/Index");
-    options.AccessDeniedPath = new PathString("");
-    options.Cookie = cookieBuilder;
-    options.SlidingExpiration = false; // belirlenen sürenin yarısına gelindiğinde süreyi belirtilen süre kadar uzatır.
-    options.ExpireTimeSpan = TimeSpan.FromDays(60);
-});
-#endregion
-
 #region identity mekanizması
 
 // identity di
@@ -67,6 +47,26 @@ builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 //.AddErrorDescriber<CustomIdentityErrorDescriber>() error mesajlarını türkçeleştirme işlemi
 
 
+#endregion
+
+#region cookie ayarları
+CookieBuilder cookieBuilder = new CookieBuilder();
+cookieBuilder.Name = "MyBlog";
+cookieBuilder.HttpOnly = true;
+cookieBuilder.SameSite = SameSiteMode.Lax; // hangi siteden kaydedilsiyse o site üzerinden gelmez
+//cookieBuilder.SameSite = SameSiteMode.Strict;// hangi siteden kaydedilsiyse o site üzerinden gelir
+cookieBuilder.SecurePolicy = CookieSecurePolicy.SameAsRequest;//sadece https istek üzerinden gonderilmesini sağlar
+
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = new PathString("/Home/Login");
+    options.LogoutPath = new PathString("/Home/Index");
+    options.AccessDeniedPath = new PathString("");
+    options.Cookie = cookieBuilder;
+    options.SlidingExpiration = false; // belirlenen sürenin yarısına gelindiğinde süreyi belirtilen süre kadar uzatır.
+    options.ExpireTimeSpan = TimeSpan.FromDays(60);
+});
 #endregion
 
 var app = builder.Build();

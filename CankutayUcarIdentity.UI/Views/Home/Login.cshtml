@@ -22,6 +22,10 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="RememberMe" class="form-check-label">Beni Hatırla :</label>
+                <input asp-for="RememberMe" class="form-check" />
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
