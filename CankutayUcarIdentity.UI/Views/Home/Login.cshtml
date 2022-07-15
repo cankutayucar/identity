@@ -29,10 +29,13 @@
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
+        <a class="btn btn-link" asp-action="ResetPassword" asp-controller="Home">Şifremi unuttum</a>
     </div>
 </div>
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

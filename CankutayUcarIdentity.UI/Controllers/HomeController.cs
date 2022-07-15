@@ -17,7 +17,7 @@ namespace CankutayUcarIdentity.UI.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             //_userManager.IsLockedOutAsync() kullanıcı kilitlimi değilmi ona bakakar true veya false dondurur
             //_userManager.AccessFailedAsync() kullanıcının başarısız giriş sayısını 1 arttırır
@@ -115,6 +115,72 @@ namespace CankutayUcarIdentity.UI.Controllers
                 }
             }
             return View(userViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(PasswordResetViewModel model)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                string passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+                string? passwordResetLink = Url.Action("ResetPasswordConfirm", "Home", new
+                {
+                    userId = user.Id,
+                    token = passwordResetToken
+                }, HttpContext.Request.Scheme);
+                Helpers.PasswordReset.PasswordResetSendEmail(passwordResetLink);
+                ViewBag.status = "Successfull";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sistemde kayıtlı email adresi bulunamamıştır.");
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirm(string userId, string token)
+        {
+            TempData["userId"] = userId;
+            TempData["token"] = token;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordConfirm([Bind("PasswordNew")] PasswordResetViewModel model)
+        {
+            string userId = TempData["userId"].ToString();
+            string token = TempData["token"].ToString();
+
+            AppUser user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                IdentityResult result = await _userManager.ResetPasswordAsync(user, token, model.PasswordNew);
+                if (result.Succeeded)
+                {
+                    await _userManager.UpdateSecurityStampAsync(user);
+                    ViewBag.status = "success";
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Bir hata meydana gelmiştir.Daha sonra tekrar deneyiniz.");
+            }
+            return View(model);
         }
     }
 }

@@ -46,7 +46,8 @@ builder.Services.AddIdentity<AppUser, AppRole>(opt =>
     .AddPasswordValidator<CustomPasswordValidator>()
     .AddUserValidator<CustomUserValidator>()
     .AddErrorDescriber<CustomIdentityErrorDescriber>()
-    .AddEntityFrameworkStores<IdentityDbContext>();
+    .AddEntityFrameworkStores<IdentityDbContext>()
+    .AddDefaultTokenProviders();
 
 
 //.AddPasswordValidator<CustomPasswordValidator>() kişisel parola kontrol mekanizması
