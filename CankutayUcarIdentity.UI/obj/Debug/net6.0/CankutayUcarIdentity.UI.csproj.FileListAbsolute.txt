@@ -559,3 +559,5 @@ C:\Users\Cankutay\Desktop\identity\CankutayUcarIdentity.UI\CankutayUcarIdentity.
 C:\Users\Cankutay\Desktop\identity\CankutayUcarIdentity.UI\CankutayUcarIdentity.UI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Cankutay\Desktop\identity\CankutayUcarIdentity.UI\CankutayUcarIdentity.UI\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Cankutay\Desktop\identity\CankutayUcarIdentity.UI\CankutayUcarIdentity.UI\bin\Debug\net6.0\AutoMapper.dll
+C:\Users\Cankutay\Desktop\identity\CankutayUcarIdentity.UI\CankutayUcarIdentity.UI\bin\Debug\net6.0\Mapster.dll
+C:\Users\Cankutay\Desktop\identity\CankutayUcarIdentity.UI\CankutayUcarIdentity.UI\bin\Debug\net6.0\Mapster.Core.dll

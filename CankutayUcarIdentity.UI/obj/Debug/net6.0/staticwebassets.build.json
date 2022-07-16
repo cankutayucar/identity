@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Rd6ctuz0CKF8XRAuNjFPro/okvWSEHnEl8l8FlvdqVs=",
+  "Hash": "a1IM9mcEK44nrFN3sD9ZeWo/8IZGqfxzZ8h3omtNWyA=",
   "Source": "CankutayUcarIdentity.UI",
   "BasePath": "_content/CankutayUcarIdentity.UI",
   "Mode": "Default",
@@ -2208,6 +2208,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\bootstrap\\scss\\vendor\\_rfs.scss"
+    },
+    {
+      "Identity": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\img\\user-manager.png",
+      "SourceId": "CankutayUcarIdentity.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\",
+      "BasePath": "_content/CankutayUcarIdentity.UI",
+      "RelativePath": "img/user-manager.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\user-manager.png"
     },
     {
       "Identity": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\jquery\\additional-methods.js",
