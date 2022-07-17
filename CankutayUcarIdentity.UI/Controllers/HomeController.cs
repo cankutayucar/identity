@@ -7,14 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CankutayUcarIdentity.UI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
-        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public HomeController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager) : base(userManager, signInManager)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
         }
 
         public IActionResult Index()
@@ -29,9 +25,8 @@ namespace CankutayUcarIdentity.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login()
         {
-            TempData["ReturnUrl"] = returnUrl;
             //üye girişi get
             return View();
         }
@@ -60,10 +55,6 @@ namespace CankutayUcarIdentity.UI.Controllers
                     if (result.Succeeded)
                     {
                         await _userManager.ResetAccessFailedCountAsync(user);
-                        if (TempData["ReturnUrl"] != null)
-                        {
-                            return RedirectToAction(TempData["ReturnUrl"].ToString());
-                        }
                         return RedirectToAction("Index", "Member");
                     }
                     else
@@ -109,10 +100,7 @@ namespace CankutayUcarIdentity.UI.Controllers
                 //_userManager.CreateAsync yeni bir kullanıcı ekleme Methodu
                 var result = await _userManager.CreateAsync(user, userViewModel.Password);
                 if (result.Succeeded) return RedirectToAction("Login", "Home");
-                foreach (var identityError in result.Errors)
-                {
-                    ModelState.AddModelError("", identityError.Description);
-                }
+                AddModelStateIdentityErrors(result);
             }
             return View(userViewModel);
         }
@@ -170,10 +158,7 @@ namespace CankutayUcarIdentity.UI.Controllers
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    AddModelStateIdentityErrors(result);
                 }
             }
             else

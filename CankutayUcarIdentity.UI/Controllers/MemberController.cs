@@ -1,30 +1,28 @@
-﻿using CankutayUcarIdentity.UI.Models;
+﻿using System.Linq.Expressions;
+using CankutayUcarIdentity.UI.ComplexTypes;
+using CankutayUcarIdentity.UI.Models;
 using CankutayUcarIdentity.UI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CankutayUcarIdentity.UI.Controllers
 {
     [Authorize]
-    public class MemberController : Controller
+    public class MemberController : BaseController
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly LinkGenerator _linkGenerator;
-        public MemberController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IHttpContextAccessor accessor)
+        public MemberController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IHttpContextAccessor accessor, IWebHostEnvironment webHostEnvironment)
+        : base(userManager, signInManager, accessor, webHostEnvironment)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _linkGenerator = accessor.HttpContext.RequestServices.GetRequiredService<LinkGenerator>();
         }
 
         [Authorize]
         public IActionResult Index()
         {
 
-            AppUser user = _userManager.FindByNameAsync(HttpContext.User.Identity?.Name).Result;
+            AppUser user = base.CurrentLogInUser;
             UserViewModel model = user.Adapt<UserViewModel>();
             return View(model);
         }
@@ -42,7 +40,7 @@ namespace CankutayUcarIdentity.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                AppUser user = await _userManager.FindByNameAsync(HttpContext.User.Identity?.Name);
+                AppUser user = base.CurrentLogInUser;
                 if (user != null)
                 {
                     bool exist = await _userManager.CheckPasswordAsync(user, model.PasswordOld);
@@ -61,10 +59,7 @@ namespace CankutayUcarIdentity.UI.Controllers
                             }
                             else
                             {
-                                foreach (var error in result.Errors)
-                                {
-                                    ModelState.AddModelError("", error.Description);
-                                }
+                                AddModelStateIdentityErrors(result);
                             }
                         }
                         else
@@ -84,13 +79,7 @@ namespace CankutayUcarIdentity.UI.Controllers
             }
             else
             {
-                foreach (var errors in ModelState.Values)
-                {
-                    foreach (var error in errors.Errors)
-                    {
-                        ModelState.AddModelError("", error.ErrorMessage);
-                    }
-                }
+                AddModelStateErrors();
             }
             return View(model);
         }
@@ -99,24 +88,49 @@ namespace CankutayUcarIdentity.UI.Controllers
         [HttpGet]
         public IActionResult UserEdit()
         {
-            AppUser user = _userManager.FindByNameAsync(this.HttpContext.User.Identity?.Name).Result;
+            AppUser user = base.CurrentLogInUser;
             UserViewModel model = user.Adapt<UserViewModel>();
+            ViewBag.gender = new SelectList(Enum.GetNames(typeof(Gender)));
             return View(model);
         }
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> UserEdit(UserViewModel model)
+        public async Task<IActionResult> UserEdit(UserViewModel model, IFormFile? UserPicture)
         {
             ModelState.Remove("Password");
+            ModelState.Remove("Picture");
+            ViewBag.gender = new SelectList(Enum.GetNames(typeof(Gender)));
             if (ModelState.IsValid)
             {
-                AppUser user = await _userManager.FindByNameAsync(this.HttpContext.User.Identity?.Name);
+                AppUser user = base.CurrentLogInUser;
                 if (user == null)
                 {
                     ModelState.AddModelError("", "Beklenmedik bir hata oldu!");
                 }
+                string imgname = string.Empty;
+                if (UserPicture != null && UserPicture.Length > 0)
+                {
+                    var oldImageName = user.Picture; // eski foto ismi
+                    imgname = Guid.NewGuid().ToString() +
+                                  Path.GetExtension(UserPicture.FileName); // yeni foto ismi
+                    var path = Path.Combine(_webHostEnvironment.WebRootPath, "img", imgname); // yeni foto yolu
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await UserPicture.CopyToAsync(stream);
+                    }
+                    var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, "img", oldImageName);
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
                 AppUser EditedUser = model.Adapt(user);
+                user.Gender = (int)model.Gender;
+                if (UserPicture != null && UserPicture.Length > 0)
+                {
+                    user.Picture = imgname;
+                }
                 if (EditedUser == null) ModelState.AddModelError("", "Beklenmedik Bir hata ile karşılaşıldı!");
                 IdentityResult result = await _userManager.UpdateAsync(EditedUser);
                 if (result.Succeeded)
@@ -128,18 +142,12 @@ namespace CankutayUcarIdentity.UI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "İşlem başarısız!");
+                    AddModelStateIdentityErrors(result);
                 }
             }
             else
             {
-                foreach (var values in ModelState.Values)
-                {
-                    foreach (var errors in values.Errors)
-                    {
-                        ModelState.AddModelError("", errors.ErrorMessage);
-                    }
-                }
+                AddModelStateErrors();
             }
             return View(model);
         }

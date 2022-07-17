@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CankutayUcarIdentity.UI.ComplexTypes;
 
 namespace CankutayUcarIdentity.UI.ViewModels
 {
@@ -20,5 +21,18 @@ namespace CankutayUcarIdentity.UI.ViewModels
         [Display(Name = "Şifre")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Display(Name = "Şehir")]
+        public string City { get; set; }
+
+        [Display(Name = "Resim")]
+        public string Picture { get; set; }
+
+        [Display(Name = "Doğum Tarihi")]
+        [DataType(DataType.Date)]
+        public DateTime? BirthDay { get; set; }
+
+        [Display(Name = "Cinsiyet")]
+        public Gender Gender { get; set; }
     }
 }

@@ -14,7 +14,7 @@ builder.Services.AddControllersWithViews()
 // db context di
 builder.Services.AddDbContext<IdentityDbContext>(a =>
 {
-    a.UseSqlServer(builder.Configuration.GetConnectionString("MsSqlConnection"));
+    a.UseSqlServer(builder.Configuration.GetConnectionString("MsSqlConnection")).UseLazyLoadingProxies();
 });
 
 #endregion
