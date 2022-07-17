@@ -29,19 +29,19 @@
 
 
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8">
-            @RenderBody()
-        </div>
-        <div class="col-md-4">
-            <h3>Menü</h3>
-            <a asp-action="PasswordChange" asp-controller="Member" class="btn btn-info col-12 mb-1 mt-1">Şifre değiştir</a>
-            <a asp-action="UserEdit" asp-controller="Member" class="btn btn-info col-12 mb-1">Bilgi güncelleme</a>
-            <a asp-action="Logout" asp-controller="Member" class="btn btn-info col-12 mb-1">Çıkış yap</a>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                @RenderBody()
+            </div>
+            <div class="col-md-4">
+                <h3>Menü</h3>
+                <a asp-action="PasswordChange" asp-controller="Member" class="btn btn-info col-12 mb-1 mt-1">Şifre değiştir</a>
+                <a asp-action="UserEdit" asp-controller="Member" class="btn btn-info col-12 mb-1">Bilgi güncelleme</a>
+                <a asp-action="Logout" asp-controller="Member" asp-route-returnUrl="/Home/Index" class="btn btn-info col-12 mb-1">Çıkış yap</a>
+            </div>
         </div>
     </div>
-</div>
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/jquery-validate/jquery.validate.min.js"></script>
     <script src="~/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

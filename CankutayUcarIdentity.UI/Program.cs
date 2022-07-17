@@ -69,13 +69,20 @@ cookieBuilder.SecurePolicy = CookieSecurePolicy.SameAsRequest;//sadece https ist
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = new PathString("/Home/Login");
-    options.LogoutPath = new PathString("/Home/Index");
+    options.LogoutPath = new PathString("/Member/Logout");
     options.AccessDeniedPath = new PathString("");
     options.Cookie = cookieBuilder;
     options.SlidingExpiration = false; // belirlenen sürenin yarısına gelindiğinde süreyi belirtilen süre kadar uzatır.
     options.ExpireTimeSpan = TimeSpan.FromDays(60);
 });
 #endregion
+
+
+
+
+builder.Services.AddHttpContextAccessor();
+
+
 
 var app = builder.Build();
 
