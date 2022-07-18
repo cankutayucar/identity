@@ -13,8 +13,8 @@ namespace CankutayUcarIdentity.UI.Controllers
     [Authorize]
     public class MemberController : BaseController
     {
-        public MemberController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IHttpContextAccessor accessor, IWebHostEnvironment webHostEnvironment)
-        : base(userManager, signInManager, accessor, webHostEnvironment)
+        public MemberController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IHttpContextAccessor accessor, IWebHostEnvironment webHostEnvironment, RoleManager<AppRole> roleManager)
+        : base(userManager, signInManager, accessor, webHostEnvironment, roleManager)
         {
         }
 
@@ -157,6 +157,13 @@ namespace CankutayUcarIdentity.UI.Controllers
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

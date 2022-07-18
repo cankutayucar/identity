@@ -70,7 +70,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = new PathString("/Home/Login");
     options.LogoutPath = new PathString("/Member/Logout");
-    options.AccessDeniedPath = new PathString("");
+    options.AccessDeniedPath = new PathString("/Member/AccessDenied");
     options.Cookie = cookieBuilder;
     options.SlidingExpiration = false; // belirlenen sürenin yarısına gelindiğinde süreyi belirtilen süre kadar uzatır.
     options.ExpireTimeSpan = TimeSpan.FromDays(60);
