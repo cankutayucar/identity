@@ -3,6 +3,8 @@ using CankutayUcarIdentity.UI.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using Microsoft.CodeAnalysis;
+
 namespace CankutayUcarIdentity.UI.Controllers
 {
     public class AdminController : BaseController
@@ -120,5 +122,46 @@ namespace CankutayUcarIdentity.UI.Controllers
             }
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> RoleAssign(string id)
+        {
+            AppUser user = await base._userManager.FindByIdAsync(id);
+            TempData["userId"] = user.Id;
+            List<string>? userRoles = await base._userManager.GetRolesAsync(user) as List<string>;
+            IQueryable<AppRole> roles = base._roleManager.Roles;
+            List<RoleAssignViewModel> assignments = new List<RoleAssignViewModel>();
+            foreach (var role in roles)
+            {
+                RoleAssignViewModel rav = new RoleAssignViewModel();
+                rav.Name = role.Name;
+                rav.Id = role.Id;
+                if (userRoles != null) rav.isChecked = userRoles.Contains(role.Name);
+                assignments.Add(rav);
+            }
+            return View(assignments);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> RoleAssign(List<RoleAssignViewModel> listModel)
+        {
+            string userId = TempData["userId"].ToString();
+            AppUser user = await base._userManager.FindByIdAsync(userId);
+            foreach (var roleAssignViewModel in listModel)
+            {
+                if (roleAssignViewModel.isChecked)
+                {
+                    await base._userManager.AddToRoleAsync(user, roleAssignViewModel.Name);
+                }
+                else
+                {
+                    await base._userManager.RemoveFromRoleAsync(user, roleAssignViewModel.Name);
+                }
+            }
+            return RedirectToAction("Users", "Admin");
+        }
+
+
     }
 }
