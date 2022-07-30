@@ -57,5 +57,68 @@ namespace CankutayUcarIdentity.UI.Controllers
             }
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> RoleDelete(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                AppRole role = await base._roleManager.FindByIdAsync(id);
+                if (role != null) await base._roleManager.DeleteAsync(role);
+                return RedirectToAction("Roles", "Admin");
+
+            }
+            else
+            {
+                ModelState.AddModelError("", "Başarısız işlem!");
+            }
+            return RedirectToAction("Roles", "Admin");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RoleUpdate(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                AppRole role = await base._roleManager.FindByIdAsync(id);
+                return View(role.Adapt<RoleUpdateGetViewModel>());
+            }
+            else
+            {
+                ModelState.AddModelError("", "Başarısız işlem!");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RoleUpdate(RoleUpdateGetViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                AppRole role = await base._roleManager.FindByIdAsync(model.Id);
+                if (role != null)
+                {
+                    AppRole editedRole = model.Adapt(role);
+                    IdentityResult result = await base._roleManager.UpdateAsync(role);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Roles", "Admin");
+                    }
+                    else
+                    {
+                        base.AddModelStateIdentityErrors(result);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Başarısız işlem!");
+                }
+            }
+            else
+            {
+                base.AddModelStateErrors();
+            }
+            return View();
+        }
     }
 }

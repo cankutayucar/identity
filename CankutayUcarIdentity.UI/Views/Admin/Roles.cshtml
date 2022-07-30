@@ -9,8 +9,10 @@
 <table class="table table-bordered table-striped table-hover">
     <thead>
         <tr>
-            <td>ID</td>
-            <td>Name</td>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Silme</th>
+            <th>Güncelleme</th>
         </tr>
     </thead>
     <tbody>
@@ -19,6 +21,8 @@
             <tr>
                 <td>@i.Id</td>
                 <td>@i.Name</td>
+                <td><a class="btn btn-danger" asp-action="RoleDelete" asp-controller="Admin" asp-route-id="@i.Id">Sil</a></td>
+                <td><a class="btn btn-warning" asp-action="RoleUpdate" asp-controller="Admin" asp-route-id="@i.Id">Güncelle</a></td>
             </tr>
         }
     </tbody>
