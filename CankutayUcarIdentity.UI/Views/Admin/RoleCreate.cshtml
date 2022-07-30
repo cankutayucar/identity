@@ -1,0 +1,24 @@
+﻿@model CankutayUcarIdentity.UI.ViewModels.RoleCreateViewModel
+
+@{
+    ViewData["Title"] = "RoleCreate";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <h3>Role Oluşturme</h3>
+        <hr />
+        <form asp-action="RoleCreate" asp-controller="Admin" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Role Oluşturma " class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

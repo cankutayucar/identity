@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Roles";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@model List<CankutayUcarIdentity.UI.ViewModels.RoleVewModel>
+<h1>Roles</h1>
+<a asp-action="RoleCreate" asp-controller="Admin" class="btn btn-info"> Role oluştur</a>
+
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in @Model)
+        {
+            <tr>
+                <td>@i.Id</td>
+                <td>@i.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+
+
+
