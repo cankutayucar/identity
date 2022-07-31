@@ -1,5 +1,7 @@
-﻿using CankutayUcarIdentity.UI.CustomValidation;
+﻿using CankutayUcarIdentity.UI.ClaimsProvider;
+using CankutayUcarIdentity.UI.CustomValidation;
 using CankutayUcarIdentity.UI.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,14 @@ builder.Services.AddDbContext<IdentityDbContext>(a =>
 });
 
 #endregion
+
+builder.Services.AddAuthorization(aut =>
+{
+    aut.AddPolicy("AdanaPolicy", pol =>
+    {
+        pol.RequireClaim("city", "adana");
+    });
+});
 
 #region identity mekanizması
 
@@ -79,7 +89,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 
-
+builder.Services.AddScoped<IClaimsTransformation, ClaimProvider>();
 builder.Services.AddHttpContextAccessor();
 
 

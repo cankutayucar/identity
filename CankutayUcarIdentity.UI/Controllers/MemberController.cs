@@ -180,5 +180,12 @@ namespace CankutayUcarIdentity.UI.Controllers
         {
             return View();
         }
+
+        [Authorize(Roles = "Admin",Policy = "AdanaPolicy")]
+        [HttpGet]
+        public IActionResult Adana()
+        {
+            return View();
+        }
     }
 }
