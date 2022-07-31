@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Claims";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@model List<System.Security.Claims.Claim>
+<h1>Claims</h1>
+<hr />
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Kim</th>
+                <th>Dağıtıcı</th>
+                <th>Ad</th>
+                <th>deger</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (System.Security.Claims.Claim claim in Model)
+            {
+                <tr>
+                    <td>@claim.Subject?.Name</td>
+                    <td>@claim.Issuer</td>
+                    <td>@claim.Type</td>
+                    <td>@claim.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

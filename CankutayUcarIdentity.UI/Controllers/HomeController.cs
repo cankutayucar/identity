@@ -89,13 +89,17 @@ namespace CankutayUcarIdentity.UI.Controllers
         public async Task<IActionResult> SignUp(UserViewModel userViewModel)
         {
             // üye ol post
+            ModelState.Remove("City");
+            ModelState.Remove("Picture");
             if (ModelState.IsValid)
             {
                 AppUser user = new AppUser
                 {
                     UserName = userViewModel.UserName,
                     PhoneNumber = userViewModel.PhoneNumber,
-                    Email = userViewModel.Email
+                    Email = userViewModel.Email,
+                    City = "",
+                    Picture = ""
                 };
                 //_userManager.CreateAsync yeni bir kullanıcı ekleme Methodu
                 var result = await _userManager.CreateAsync(user, userViewModel.Password);

@@ -15,6 +15,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes = true
 build_property.MSBuildProjectDirectory = C:\Users\Cankutay\Desktop\identity\CankutayUcarIdentity.UI\CankutayUcarIdentity.UI
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Admin/Claims.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ2xhaW1zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -63,8 +67,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXEFjY2Vzc0RlbmllZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Member/Editor.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXEVkaXRvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Member/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Member/Manager.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXE1hbmFnZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Cankutay/Desktop/identity/CankutayUcarIdentity.UI/CankutayUcarIdentity.UI/Views/Member/PasswordChange.cshtml]

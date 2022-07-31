@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Security.Claims;
 using CankutayUcarIdentity.UI.ComplexTypes;
 using CankutayUcarIdentity.UI.Models;
 using CankutayUcarIdentity.UI.ViewModels;
@@ -162,6 +163,20 @@ namespace CankutayUcarIdentity.UI.Controllers
         [Authorize]
         [HttpGet]
         public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Manager,Admin")]
+        [HttpGet]
+        public IActionResult Manager()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Editor,Admin")]
+        [HttpGet]
+        public IActionResult Editor()
         {
             return View();
         }

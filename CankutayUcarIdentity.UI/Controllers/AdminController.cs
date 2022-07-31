@@ -3,10 +3,12 @@ using CankutayUcarIdentity.UI.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.CodeAnalysis;
 
 namespace CankutayUcarIdentity.UI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : BaseController
     {
         public AdminController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager) : base(userManager, signInManager, roleManager)
@@ -142,7 +144,6 @@ namespace CankutayUcarIdentity.UI.Controllers
             return View(assignments);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> RoleAssign(List<RoleAssignViewModel> listModel)
         {
@@ -162,6 +163,10 @@ namespace CankutayUcarIdentity.UI.Controllers
             return RedirectToAction("Users", "Admin");
         }
 
-
+        [HttpGet]
+        public IActionResult Claims()
+        {
+            return View(this.HttpContext.User.Claims.ToList());
+        }
     }
 }

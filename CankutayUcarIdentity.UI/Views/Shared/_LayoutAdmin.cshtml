@@ -32,13 +32,16 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                @RenderBody()
+                <div class="container">
+                    @RenderBody()
+                </div>
             </div>
             <div class="col-md-4">
                 <h3>Menü</h3>
+                <a asp-action="Claims" asp-controller="Admin" class="btn btn-danger col-12 mb-1 mt-1">Üye Claims</a>
                 <a asp-action="Users" asp-controller="Admin" class="btn btn-danger col-12 mb-1 mt-1">Üyeler</a>
                 <a asp-action="Roles" asp-controller="Admin" class="btn btn-danger col-12 mb-1">Roller</a>
-                <a asp-action="Logout" asp-controller="Admin" asp-route-returnUrl="/Home/Index" class="btn btn-danger col-12 mb-1">Çıkış yap</a>
+                <a asp-action="Logout" asp-controller="Member" asp-route-returnUrl="/Home/Index" class="btn btn-danger col-12 mb-1">Çıkış yap</a>
             </div>
         </div>
     </div>
