@@ -22,6 +22,20 @@ namespace CankutayUcarIdentity.UI.ClaimsProvider
                 AppUser user = await _userManager.FindByNameAsync(principal.Identity.Name);
                 if (user != null)
                 {
+                    if (user.BirthDay != null)
+                    {
+                        if (!principal.HasClaim(c => c.Type == "violence"))
+                        {
+                            var today = DateTime.Now;
+                            var age = today.Year - user.BirthDay?.Year;
+                            if (age > 15)
+                            {
+                                Claim claim = new Claim("violence", true.ToString(), ClaimValueTypes.String,
+                                    "internal");
+                                identity.AddClaim(claim);
+                            }
+                        }
+                    }
                     if (user.City != null)
                     {
                         if (!principal.HasClaim(c => c.Type == "city"))

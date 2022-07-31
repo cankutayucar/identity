@@ -27,6 +27,10 @@ builder.Services.AddAuthorization(aut =>
     {
         pol.RequireClaim("city", "adana");
     });
+    aut.AddPolicy("ViolencePolicy", pol =>
+    {
+        pol.RequireClaim("violence", true.ToString());
+    });
 });
 
 #region identity mekanizması
