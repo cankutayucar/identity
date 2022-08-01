@@ -162,8 +162,12 @@ namespace CankutayUcarIdentity.UI.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult AccessDenied()
+        public IActionResult AccessDenied(string ReturnUrl)
         {
+            //if (ReturnUrl.ToLower().Contains("exchange"))
+            //{
+
+            //}
             return View();
         }
 
@@ -181,9 +185,40 @@ namespace CankutayUcarIdentity.UI.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin",Policy = "AdanaPolicy")]
+        [Authorize(Roles = "Admin", Policy = "AdanaPolicy")]
         [HttpGet]
         public IActionResult Adana()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin", Policy = "ViolencePolicy")]
+        [HttpGet]
+        public IActionResult Violence()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> ExchangeRedirect()
+        {
+            bool result = User.HasClaim(c => c.Type == "ExpireDateExchange");
+            if (!result)
+            {
+                AppUser user = CurrentLogInUser;
+                Claim ExpireDateExchange = new Claim("ExpireDateExchange",
+                    DateTime.Now.AddDays(30).Date.ToShortDateString(), ClaimValueTypes.String, "internal");
+                await _userManager.AddClaimAsync(CurrentLogInUser, ExpireDateExchange);
+                await _signInManager.SignOutAsync();
+                await _signInManager.SignInAsync(user, true);
+            }
+            return RedirectToAction("Exchange", "Member");
+        }
+
+        [Authorize(Roles = "Admin", Policy = "ExpireDateExchangePolicy")]
+        [HttpGet]
+        public IActionResult Exchange()
         {
             return View();
         }

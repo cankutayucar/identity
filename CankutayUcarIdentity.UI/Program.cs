@@ -1,7 +1,9 @@
 ﻿using CankutayUcarIdentity.UI.ClaimsProvider;
 using CankutayUcarIdentity.UI.CustomValidation;
 using CankutayUcarIdentity.UI.Models;
+using CankutayUcarIdentity.UI.Requiretments;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation();
+builder.Services.AddTransient<IAuthorizationHandler, ExpireDateExchangeHandler>();
 
 #region identity db context dependency injection
 
@@ -30,6 +33,10 @@ builder.Services.AddAuthorization(aut =>
     aut.AddPolicy("ViolencePolicy", pol =>
     {
         pol.RequireClaim("violence", true.ToString());
+    });
+    aut.AddPolicy("ExpireDateExchangePolicy", pol =>
+    {
+        pol.AddRequirements(new ExpireDateExchangeRequiretment());
     });
 });
 
