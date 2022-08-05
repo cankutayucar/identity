@@ -11,6 +11,7 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("6b9d5f99-8c3c-4e5c-8cd2-2fc883d66bd6")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("CankutayUcarIdentity.UI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]

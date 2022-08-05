@@ -1,10 +1,12 @@
-﻿using CankutayUcarIdentity.UI.Helpers;
+﻿using System.Security.Claims;
+using CankutayUcarIdentity.UI.Helpers;
 using CankutayUcarIdentity.UI.Models;
 using CankutayUcarIdentity.UI.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace CankutayUcarIdentity.UI.Controllers
 {
@@ -105,7 +107,7 @@ namespace CankutayUcarIdentity.UI.Controllers
 
                 if (await base._userManager.Users.AnyAsync(u => u.PhoneNumber == userViewModel.PhoneNumber))
                 {
-                    ModelState.AddModelError("","Bu telefon numarası kayıtlıdır.");
+                    ModelState.AddModelError("", "Bu telefon numarası kayıtlıdır.");
                     return View(userViewModel);
                 }
 
@@ -212,6 +214,73 @@ namespace CankutayUcarIdentity.UI.Controllers
                 ViewBag.status = "Bir hata meydana geldi lütfen daha sonra tekrar deneyiniz";
             }
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult FacebookLogin(string ReturnUrl)
+        {
+            string RedirectUrl = Url.Action("ExternalResponse", "Home", new { ReturnUrl = ReturnUrl });
+            var properties = base._signInManager.ConfigureExternalAuthenticationProperties("Facebook", RedirectUrl);
+            return new ChallengeResult("Facebook", properties);
+        }
+
+
+        public async Task<IActionResult> ExternalResponse(string ReturnUrl = "/")
+        {
+            ExternalLoginInfo info = await base._signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                SignInResult result = await base._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, true);
+                if (result.Succeeded)
+                {
+                    return Redirect(ReturnUrl);
+                }
+                else
+                {
+                    AppUser user = new AppUser();
+                    user.Email = info.Principal.FindFirst(ClaimTypes.Email).Value;
+                    string externalUserId = info.Principal.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    if (info.Principal.HasClaim(claim => claim.Type == ClaimTypes.Name))
+                    {
+                        string userName = info.Principal.FindFirstValue(ClaimTypes.Name);
+                        userName = userName.Replace(' ', '_').ToLower() + externalUserId.Substring(0, 5).ToString();
+                        user.UserName = userName;
+                    }
+                    else
+                    {
+                        user.UserName = info.Principal.FindFirstValue(ClaimTypes.Email);
+                    }
+
+                    user.City = "";
+                    user.Picture = "";
+
+                    IdentityResult result2 = await base._userManager.CreateAsync(user);
+
+                    if (result2.Succeeded)
+                    {
+                        IdentityResult result3 = await base._userManager.AddLoginAsync(user, info);
+                        if (result3.Succeeded)
+                        {
+                            await base._signInManager.SignInAsync(user, true);
+                            return Redirect(ReturnUrl);
+                        }
+                        else
+                        {
+                            AddModelStateIdentityErrors(result3);
+                        }
+                    }
+                    else
+                    {
+                        AddModelStateIdentityErrors(result2);
+                    }
+                }
+            }
+
+            return RedirectToAction("Error", "Home");
         }
     }
 }

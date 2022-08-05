@@ -40,6 +40,13 @@ builder.Services.AddAuthorization(aut =>
     });
 });
 
+
+builder.Services.AddAuthentication().AddFacebook(opts =>
+{
+    opts.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+    opts.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+});
+
 #region identity mekanizması
 
 // identity di
@@ -54,7 +61,7 @@ builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 
         // kullanıcı adi kontrol mekanizması
         opt.User.RequireUniqueEmail = true; // eşşiz Email sahip olmalıdır
-        opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";//kullanıcı adında kullanabilecek karakterler
+        opt.User.AllowedUserNameCharacters = "abcçdefgğhıijklmnoöpqrsştuüvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";//kullanıcı adında kullanabilecek karakterler
 
         //opt.Lockout = new LockoutOptions()
         //{
