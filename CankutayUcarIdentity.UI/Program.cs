@@ -45,6 +45,14 @@ builder.Services.AddAuthentication().AddFacebook(opts =>
 {
     opts.AppId = builder.Configuration["Authentication:Facebook:AppId"];
     opts.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+}).AddGoogle(opts =>
+{
+    opts.ClientId = builder.Configuration["Authentication:Google:ClientID"];
+    opts.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+}).AddMicrosoftAccount(opts =>
+{
+    opts.ClientId = builder.Configuration["Authentication:Microsoft:ClientID"];
+    opts.ClientSecret = builder.Configuration["Authentication:Microsoft:ClientSecret"];
 });
 
 #region identity mekanizması

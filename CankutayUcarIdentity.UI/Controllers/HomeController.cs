@@ -231,6 +231,22 @@ namespace CankutayUcarIdentity.UI.Controllers
         }
 
         [HttpGet]
+        public IActionResult GoogleLogin(string ReturnUrl)
+        {
+            string? RedirectUrl = Url.Action("ExternalResponse", "Home", new { ReturnUrl = ReturnUrl });
+            var properties = base._signInManager.ConfigureExternalAuthenticationProperties("Google", RedirectUrl);
+            return new ChallengeResult("Google", properties);
+        }
+
+        [HttpGet]
+        public IActionResult MicrosoftLogin(string ReturnUrl)
+        {
+            string? RedirectUrl = Url.Action("ExternalResponse", "Home", new { ReturnUrl = ReturnUrl });
+            var properties = base._signInManager.ConfigureExternalAuthenticationProperties("Microsoft", RedirectUrl);
+            return new ChallengeResult("Microsoft", properties);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ExternalResponse(string ReturnUrl = "/")
         {
             ExternalLoginInfo info = await base._signInManager.GetExternalLoginInfoAsync();
@@ -243,7 +259,7 @@ namespace CankutayUcarIdentity.UI.Controllers
                 SignInResult result = await base._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, true);
                 if (result.Succeeded)
                 {
-                    return Redirect(ReturnUrl);
+                    return RedirectToAction("Index", "Member");
                 }
                 else
                 {
@@ -264,31 +280,48 @@ namespace CankutayUcarIdentity.UI.Controllers
                     user.City = "";
                     user.Picture = "";
 
-                    IdentityResult result2 = await base._userManager.CreateAsync(user);
 
-                    if (result2.Succeeded)
+
+                    AppUser user2 =
+                        await base._userManager.FindByEmailAsync(info.Principal.FindFirstValue(ClaimTypes.Email));
+                    if (user2 == null)
                     {
-                        IdentityResult result3 = await base._userManager.AddLoginAsync(user, info);
-                        if (result3.Succeeded)
+                        IdentityResult result2 = await base._userManager.CreateAsync(user);
+
+                        if (result2.Succeeded)
                         {
-                            if (this.HttpContext.User.Identity.IsAuthenticated)
+                            IdentityResult result3 = await base._userManager.AddLoginAsync(user, info);
+                            if (result3.Succeeded)
                             {
-                                await base._signInManager.SignOutAsync();
+                                if (this.HttpContext.User.Identity.IsAuthenticated)
+                                {
+                                    await base._signInManager.SignOutAsync();
+                                }
+                                //await base._signInManager.SignInAsync(user, true);
+                                await base._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
+                                    true);
+                                return RedirectToAction("Index", "Member");
                             }
-                            //await base._signInManager.SignInAsync(user, true);
-                            await base._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
-                                true);
-                            return Redirect(ReturnUrl);
+                            else
+                            {
+                                AddModelStateIdentityErrors(result3);
+                            }
                         }
                         else
                         {
-                            AddModelStateIdentityErrors(result3);
+                            AddModelStateIdentityErrors(result2);
                         }
                     }
                     else
                     {
-                        AddModelStateIdentityErrors(result2);
+                        IdentityResult result3 = await base._userManager.AddLoginAsync(user2, info);
+                        await base._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
+                            true);
+                        return RedirectToAction("Index", "Member");
                     }
+
+
+
                 }
             }
 
