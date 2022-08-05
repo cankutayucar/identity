@@ -1,11 +1,11 @@
-﻿using System.Security.Claims;
-using CankutayUcarIdentity.UI.Helpers;
+﻿using CankutayUcarIdentity.UI.Helpers;
 using CankutayUcarIdentity.UI.Models;
 using CankutayUcarIdentity.UI.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace CankutayUcarIdentity.UI.Controllers
@@ -217,14 +217,20 @@ namespace CankutayUcarIdentity.UI.Controllers
         }
 
         [HttpGet]
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult FacebookLogin(string ReturnUrl)
         {
-            string RedirectUrl = Url.Action("ExternalResponse", "Home", new { ReturnUrl = ReturnUrl });
+            string? RedirectUrl = Url.Action("ExternalResponse", "Home", new { ReturnUrl = ReturnUrl });
             var properties = base._signInManager.ConfigureExternalAuthenticationProperties("Facebook", RedirectUrl);
             return new ChallengeResult("Facebook", properties);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> ExternalResponse(string ReturnUrl = "/")
         {
             ExternalLoginInfo info = await base._signInManager.GetExternalLoginInfoAsync();
@@ -265,7 +271,13 @@ namespace CankutayUcarIdentity.UI.Controllers
                         IdentityResult result3 = await base._userManager.AddLoginAsync(user, info);
                         if (result3.Succeeded)
                         {
-                            await base._signInManager.SignInAsync(user, true);
+                            if (this.HttpContext.User.Identity.IsAuthenticated)
+                            {
+                                await base._signInManager.SignOutAsync();
+                            }
+                            //await base._signInManager.SignInAsync(user, true);
+                            await base._signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey,
+                                true);
                             return Redirect(ReturnUrl);
                         }
                         else
@@ -280,7 +292,8 @@ namespace CankutayUcarIdentity.UI.Controllers
                 }
             }
 
-            return RedirectToAction("Error", "Home");
+            List<string>? errors = ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage).ToList();
+            return View("Error", errors);
         }
     }
 }
