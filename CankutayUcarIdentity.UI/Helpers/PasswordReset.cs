@@ -5,11 +5,11 @@ namespace CankutayUcarIdentity.UI.Helpers
 {
     public static class PasswordReset
     {
-        public static void PasswordResetSendEmail(string? link)
+        public static void PasswordResetSendEmail(string? link,string email)
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress("");
-            mail.To.Add("");
+            mail.To.Add(email);
             mail.Subject = $"www.cankutayucar.com::şifre sıfırlama";
             mail.Body = "<h2>Şifrenizi  yenilemek için lütfen aşağıdaki linke tıklayınız</h2><hr/>";
             mail.Body += $"<a href='{link}>şifre yenileme linki</a>'";

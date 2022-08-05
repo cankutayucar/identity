@@ -1,4 +1,5 @@
-﻿using CankutayUcarIdentity.UI.Models;
+﻿using CankutayUcarIdentity.UI.Helpers;
+using CankutayUcarIdentity.UI.Models;
 using CankutayUcarIdentity.UI.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,14 @@ namespace CankutayUcarIdentity.UI.Controllers
                         ModelState.AddModelError("", "Hesabınız Kilitlenmiştir.");
                         return View(loginViewModel);
                     }
+
+                    bool isConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+                    if (!isConfirmed)
+                    {
+                        ModelState.AddModelError("", "Email Adresi doğrulaması gerekli! Lütfen e-mail adresinizi kontrol ediniz!");
+                        return View(loginViewModel);
+                    }
+
                     //_signInManager.SignOutAsync() sistemde bir cookie bilgisi var ve login olunmuşşsa cookie silinir sistemden çıkış yapılır
                     await _signInManager.SignOutAsync();
 
@@ -93,6 +102,13 @@ namespace CankutayUcarIdentity.UI.Controllers
             ModelState.Remove("Picture");
             if (ModelState.IsValid)
             {
+
+                if (await base._userManager.Users.AnyAsync(u => u.PhoneNumber == userViewModel.PhoneNumber))
+                {
+                    ModelState.AddModelError("","Bu telefon numarası kayıtlıdır.");
+                    return View(userViewModel);
+                }
+
                 AppUser user = new AppUser
                 {
                     UserName = userViewModel.UserName,
@@ -103,7 +119,17 @@ namespace CankutayUcarIdentity.UI.Controllers
                 };
                 //_userManager.CreateAsync yeni bir kullanıcı ekleme Methodu
                 var result = await _userManager.CreateAsync(user, userViewModel.Password);
-                if (result.Succeeded) return RedirectToAction("Login", "Home");
+                if (result.Succeeded)
+                {
+                    string emailConfirmationToken = await base._userManager.GenerateEmailConfirmationTokenAsync(user);
+                    string? emailConfirmUrl = Url.Action("ConfirmEmail", "Home", new
+                    {
+                        userId = user.Id,
+                        token = emailConfirmationToken
+                    }, HttpContext.Request.Scheme);
+                    EmailConfirmation.EmailConfirmSendEmail(emailConfirmUrl, user.Email);
+                    return RedirectToAction("Login", "Home");
+                }
                 AddModelStateIdentityErrors(result);
             }
             return View(userViewModel);
@@ -127,7 +153,7 @@ namespace CankutayUcarIdentity.UI.Controllers
                     userId = user.Id,
                     token = passwordResetToken
                 }, HttpContext.Request.Scheme);
-                Helpers.PasswordReset.PasswordResetSendEmail(passwordResetLink);
+                Helpers.PasswordReset.PasswordResetSendEmail(passwordResetLink, user.Email);
                 ViewBag.status = "Successfull";
             }
             else
@@ -170,6 +196,22 @@ namespace CankutayUcarIdentity.UI.Controllers
                 ModelState.AddModelError("", "Bir hata meydana gelmiştir.Daha sonra tekrar deneyiniz.");
             }
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var user = await base._userManager.FindByIdAsync(userId);
+            IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                ViewBag.status = "Email adresiniz onayanmıştır login ekranından giriş yapabilirsiniz";
+            }
+            else
+            {
+                ViewBag.status = "Bir hata meydana geldi lütfen daha sonra tekrar deneyiniz";
+            }
+            return View();
         }
     }
 }

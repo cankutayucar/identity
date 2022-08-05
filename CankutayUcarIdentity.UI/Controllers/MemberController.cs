@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Mapster;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace CankutayUcarIdentity.UI.Controllers
 {
@@ -105,6 +106,15 @@ namespace CankutayUcarIdentity.UI.Controllers
             if (ModelState.IsValid)
             {
                 AppUser user = base.CurrentLogInUser;
+                string phoneNumber = await base._userManager.GetPhoneNumberAsync(user);
+                if (phoneNumber != model.PhoneNumber)
+                {
+                    if (await base._userManager.Users.AnyAsync(u => u.PhoneNumber == model.PhoneNumber))
+                    {
+                        ModelState.AddModelError("", "Bu telefon numarası kullanılmaktadır");
+                        return View(model);
+                    }
+                }
                 if (user == null)
                 {
                     ModelState.AddModelError("", "Beklenmedik bir hata oldu!");
@@ -204,12 +214,15 @@ namespace CankutayUcarIdentity.UI.Controllers
         public async Task<IActionResult> ExchangeRedirect()
         {
             bool result = User.HasClaim(c => c.Type == "ExpireDateExchange");
+            AppUser user = CurrentLogInUser;
             if (!result)
             {
-                AppUser user = CurrentLogInUser;
                 Claim ExpireDateExchange = new Claim("ExpireDateExchange",
                     DateTime.Now.AddDays(30).Date.ToShortDateString(), ClaimValueTypes.String, "internal");
                 await _userManager.AddClaimAsync(CurrentLogInUser, ExpireDateExchange);
+            }
+            if (user != null)
+            {
                 await _signInManager.SignOutAsync();
                 await _signInManager.SignInAsync(user, true);
             }

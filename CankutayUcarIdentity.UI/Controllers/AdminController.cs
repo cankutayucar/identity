@@ -28,8 +28,14 @@ namespace CankutayUcarIdentity.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Roles()
+        public async Task<IActionResult> Roles()
         {
+            AppUser user = CurrentLogInUser;
+            if (user != null)
+            {
+                await _signInManager.SignOutAsync();
+                await _signInManager.SignInAsync(user, true);
+            }
             return View(base._roleManager.Roles.ToList().Adapt<List<RoleVewModel>>());
         }
 
