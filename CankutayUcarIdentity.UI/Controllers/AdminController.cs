@@ -174,5 +174,23 @@ namespace CankutayUcarIdentity.UI.Controllers
         {
             return View(this.HttpContext.User.Claims.ToList());
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetUserPassword(string id)
+        {
+            AppUser user = await base._userManager.FindByIdAsync(id);
+            ResetPasswordByAdminViewModel model = user.Adapt<ResetPasswordByAdminViewModel>();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetUserPassword(ResetPasswordByAdminViewModel model)
+        {
+            AppUser user = await base._userManager.FindByIdAsync(model.Id);
+            string token = await base._userManager.GeneratePasswordResetTokenAsync(user);
+            await base._userManager.ResetPasswordAsync(user, token, model.NewPassword);
+            await base._userManager.UpdateSecurityStampAsync(user);
+            return RedirectToAction("Users", "Admin");
+        }
     }
 }
