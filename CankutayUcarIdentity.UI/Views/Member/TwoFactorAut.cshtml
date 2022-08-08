@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "TwoFactorAut";
     Layout = "~/Views/Shared/_LayoutMember.cshtml";
 }
@@ -37,6 +36,20 @@
         <div class="col col-12 mt-5">
             <div class="alert alert-info">
                 @TempData["message"]?.ToString()
+            </div>
+        </div>
+    }
+    @if(TempData["recoveryCodes"] != null)
+    {
+        <div class="col col-12 mt-5">
+            <div class="alert alert-info">
+                Aşağıdaki kodları güvenli bir yerde saklayınız. Microsoft/Google Authenticator uygulamasını kullanamadığınız durumlarda bu kurtarma kodlarını kullanabilirsiniz.
+            </div>
+            <div class="alert alert-secondary mt-2">
+                @foreach (string code in (TempData["recoveryCodes"] as string[]))
+                {
+                    <strong>@code</strong>
+                }
             </div>
         </div>
     }

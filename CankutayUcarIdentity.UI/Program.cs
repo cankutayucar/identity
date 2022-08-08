@@ -2,6 +2,7 @@
 using CankutayUcarIdentity.UI.CustomValidation;
 using CankutayUcarIdentity.UI.Models;
 using CankutayUcarIdentity.UI.Requiretments;
+using CankutayUcarIdentity.UI.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -120,7 +121,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddScoped<IClaimsTransformation, ClaimProvider>();
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddScoped<TwoFactorService>();
 
 
 var app = builder.Build();

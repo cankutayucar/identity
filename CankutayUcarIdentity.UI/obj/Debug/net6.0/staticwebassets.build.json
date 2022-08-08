@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "tsxXP7m5KgfHwjmskPTwQJh5q0wCk6BG1oEIdR3va5E=",
+  "Hash": "IpIXxf/qws9il9Iol90kEfTvdlOwNNKFW41RloBKnJA=",
   "Source": "CankutayUcarIdentity.UI",
   "BasePath": "_content/CankutayUcarIdentity.UI",
   "Mode": "Default",
@@ -7053,6 +7053,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\twitter-bootstrap\\js\\bootstrap.min.js"
+    },
+    {
+      "Identity": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\qrcode\\qrcode.js",
+      "SourceId": "CankutayUcarIdentity.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\",
+      "BasePath": "_content/CankutayUcarIdentity.UI",
+      "RelativePath": "qrcode/qrcode.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\qrcode\\qrcode.js"
     },
     {
       "Identity": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\qrcode\\qrcode.min.js",

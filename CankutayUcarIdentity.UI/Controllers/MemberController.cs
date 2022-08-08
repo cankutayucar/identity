@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using CankutayUcarIdentity.UI.ComplexTypes;
 using CankutayUcarIdentity.UI.Models;
+using CankutayUcarIdentity.UI.Services;
 using CankutayUcarIdentity.UI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,9 +16,11 @@ namespace CankutayUcarIdentity.UI.Controllers
     [Authorize]
     public class MemberController : BaseController
     {
-        public MemberController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IHttpContextAccessor accessor, IWebHostEnvironment webHostEnvironment, RoleManager<AppRole> roleManager)
+        private readonly TwoFactorService _twoFactorService;
+        public MemberController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IHttpContextAccessor accessor, IWebHostEnvironment webHostEnvironment, RoleManager<AppRole> roleManager, TwoFactorService twoFactorService)
         : base(userManager, signInManager, accessor, webHostEnvironment, roleManager)
         {
+            _twoFactorService = twoFactorService;
         }
 
         [Authorize]
@@ -260,12 +263,50 @@ namespace CankutayUcarIdentity.UI.Controllers
                 case TwoFactor.Email:
                     break;
                 case TwoFactor.MicrosoftGoogle:
-                    break;
+                    return RedirectToAction("TwoFactorWithAuthenticator", "Member");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
             await base._userManager.UpdateAsync(base.CurrentLogInUser);
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TwoFactorWithAuthenticator()
+        {
+            string unformatedKey = await _userManager.GetAuthenticatorKeyAsync(base.CurrentLogInUser);
+            if (string.IsNullOrEmpty(unformatedKey))
+            {
+                await base._userManager.ResetAuthenticatorKeyAsync(base.CurrentLogInUser);
+                unformatedKey = await base._userManager.GetAuthenticatorKeyAsync(base.CurrentLogInUser);
+            }
+            AuthenticatorViewModel model = new AuthenticatorViewModel();
+            model.SharedKey = unformatedKey;
+            model.AuthenticatorUri = _twoFactorService.GenerateQrCodeUri(base.CurrentLogInUser.Email, unformatedKey);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorWithAuthenticator(AuthenticatorViewModel model)
+        {
+            string verificationCode = model.VirficationCode.Replace(" ", string.Empty).Replace("-", string.Empty);
+            bool isFATokenValid = await base._userManager.VerifyTwoFactorTokenAsync(base.CurrentLogInUser,
+                base._userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
+            if (isFATokenValid)
+            {
+                base.CurrentLogInUser.TwoFactorEnabled = true;
+                base.CurrentLogInUser.TwoFactor = (sbyte)TwoFactor.MicrosoftGoogle;
+                var recoveryCodes =
+                    await base._userManager.GenerateNewTwoFactorRecoveryCodesAsync(base.CurrentLogInUser, 5);
+                TempData["recoveryCodes"] = recoveryCodes;
+                TempData["message"] = "iki adımlı kimlik doğrulama tipiniz Microsoft/Google Authenticator olarak belirlenmiştir";
+                return RedirectToAction("TwoFactorAut", "Member");
+            }
+            else
+            {
+                ModelState.AddModelError("","Girdiğiniz doğrulama kodu yanlıştır!");
+                return View(model);
+            }
         }
     }
 }
