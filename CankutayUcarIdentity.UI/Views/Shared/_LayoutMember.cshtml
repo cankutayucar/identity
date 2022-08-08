@@ -31,10 +31,10 @@
                         <a class="btn btn-info" asp-action="Editor" asp-controller="Member">Editor Ana Sayfa</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-info" asp-action="Adana" asp-controller="Member">Adanalılar ana sayfa</a>
+                        <a class="btn btn-info" asp-action="Adana" asp-controller="Member">Adanalılar ana sayfası</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-info" asp-action="Violence" asp-controller="Member">Violence ana sayfa</a>
+                        <a class="btn btn-info" asp-action="Violence" asp-controller="Member">Şiddet içeren içerikler sayfası</a>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-info" asp-action="ExchangeRedirect" asp-controller="Member">Muhasebe ana sayfa</a>
@@ -54,6 +54,7 @@
             </div>
             <div class="col-md-4">
                 <h3>Menü</h3>
+                <a class="btn btn-info col-12" asp-action="TwoFactorAut" asp-controller="Member"> İki adımlı kimlik doğrulama</a>
                 <a asp-action="PasswordChange" asp-controller="Member" class="btn btn-info col-12 mb-1 mt-1">Şifre değiştir</a>
                 <a asp-action="UserEdit" asp-controller="Member" class="btn btn-info col-12 mb-1">Bilgi güncelleme</a>
                 <a asp-action="Logout" asp-controller="Member" asp-route-returnUrl="/Home/Index" class="btn btn-info col-12 mb-1">Çıkış yap</a>

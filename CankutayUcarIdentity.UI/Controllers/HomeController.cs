@@ -117,7 +117,8 @@ namespace CankutayUcarIdentity.UI.Controllers
                     PhoneNumber = userViewModel.PhoneNumber,
                     Email = userViewModel.Email,
                     City = "",
-                    Picture = ""
+                    Picture = "",
+                    TwoFactor = 0
                 };
                 //_userManager.CreateAsync yeni bir kullanıcı ekleme Methodu
                 var result = await _userManager.CreateAsync(user, userViewModel.Password);

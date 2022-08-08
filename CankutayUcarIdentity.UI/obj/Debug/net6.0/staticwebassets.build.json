@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "AVj2z7PzQJs7QyEys5t+zsh5u8jhlJJCLEB/heaUtC8=",
+  "Hash": "tsxXP7m5KgfHwjmskPTwQJh5q0wCk6BG1oEIdR3va5E=",
   "Source": "CankutayUcarIdentity.UI",
   "BasePath": "_content/CankutayUcarIdentity.UI",
   "Mode": "Default",
@@ -2225,6 +2225,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\img\\07917dc6-87cc-4da3-a7ae-5d5658fafb70.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\img\\97bef051-c442-4ddf-a2f5-fce57cd36f69.jpg",
+      "SourceId": "CankutayUcarIdentity.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\",
+      "BasePath": "_content/CankutayUcarIdentity.UI",
+      "RelativePath": "img/97bef051-c442-4ddf-a2f5-fce57cd36f69.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\img\\97bef051-c442-4ddf-a2f5-fce57cd36f69.jpg"
     },
     {
       "Identity": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\img\\user-manager.png",
@@ -7036,6 +7053,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\twitter-bootstrap\\js\\bootstrap.min.js"
+    },
+    {
+      "Identity": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\qrcode\\qrcode.min.js",
+      "SourceId": "CankutayUcarIdentity.UI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\",
+      "BasePath": "_content/CankutayUcarIdentity.UI",
+      "RelativePath": "qrcode/qrcode.min.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\qrcode\\qrcode.min.js"
     },
     {
       "Identity": "C:\\Users\\Cankutay\\Desktop\\identity\\CankutayUcarIdentity.UI\\CankutayUcarIdentity.UI\\wwwroot\\twitter-bootstrap\\css\\bootstrap.min.css",

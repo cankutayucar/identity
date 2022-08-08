@@ -235,5 +235,37 @@ namespace CankutayUcarIdentity.UI.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult TwoFactorAut()
+        {
+            return View(new AuthenticatorViewModel
+            {
+                TwoFactorType = (TwoFactor)(base.CurrentLogInUser.TwoFactor ?? 0)
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorAut(AuthenticatorViewModel model)
+        {
+            switch (model.TwoFactorType)
+            {
+                case TwoFactor.None:
+                    base.CurrentLogInUser.TwoFactorEnabled = false;
+                    base.CurrentLogInUser.TwoFactor = (sbyte)TwoFactor.None;
+                    TempData["message"] = "iki adımlı kimlik doğrulama tipiniz hiçbiri olarak belirlenmiştir";
+                    break;
+                case TwoFactor.Phone:
+                    break;
+                case TwoFactor.Email:
+                    break;
+                case TwoFactor.MicrosoftGoogle:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            await base._userManager.UpdateAsync(base.CurrentLogInUser);
+            return View(model);
+        }
     }
 }

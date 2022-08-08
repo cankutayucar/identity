@@ -8,5 +8,6 @@ namespace CankutayUcarIdentity.UI.Models
         public string Picture { get; set; }
         public DateTime? BirthDay { get; set; }
         public int Gender { get; set; }
+        public sbyte? TwoFactor { get; set; }
     }
 }

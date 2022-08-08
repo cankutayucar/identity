@@ -108,6 +108,9 @@ namespace CankutayUcarIdentity.UI.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<short?>("TwoFactor")
+                        .HasColumnType("smallint");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
