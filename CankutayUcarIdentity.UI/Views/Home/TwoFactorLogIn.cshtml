@@ -1,0 +1,51 @@
+﻿@using CankutayUcarIdentity.UI.ComplexTypes
+@model CankutayUcarIdentity.UI.ViewModels.TwoFactorLogInViewModel
+@{
+    ViewData["Title"] = "TwoFactorLogIn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-4 offset-4">
+        <h4>İki adımlı kimlik doğrulama</h4>
+        <hr />
+        <form asp-action="TwoFactorLogIn" asp-controller="Home" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="VerificationCode" class="form-label"></label>
+                <input asp-for="VerificationCode" class="form-control" />
+                <span asp-validation-for="VerificationCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" asp-for="isRememberMe" class="form-check-input"/>
+                <label asp-for="isRememberMe" class="form-check-label">Beni hatırla</label>
+            </div>
+            @if (Model.TwoFactorType == TwoFactor.MicrosoftGoogle)
+            {
+                <div class="form-group">
+                    <input type="checkbox" asp-for="isRecoveryCode" class="form-check-input"/>
+                    <label asp-for="isRecoveryCode" class="form-check-label">Kurtarma kodu girmek için bu kutucuğu işaretleyiniz</label>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Giriş yap" class="btn btn-success"/>
+            </div>
+        </form>
+        <div class="alert alert-info">
+            @switch (Model.TwoFactorType)
+            {
+                case TwoFactor.Phone:
+                    <span>Telefonunuza gelen sms kodunu bu alana giriniz</span>
+                    break;
+                case TwoFactor.Email:
+                    <span>Email adresinize gelen sms kodunu bu alana giriniz</span>
+                    break;
+                case TwoFactor.MicrosoftGoogle:
+                    <span>Microsoft/Google Authenticator uygulamanızdaki kodu bu alana giriniz</span>
+                    break;
+                default:
+                    break;
+            }        
+        </div>
+    </div>
+</div>

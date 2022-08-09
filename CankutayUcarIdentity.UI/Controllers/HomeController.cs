@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using CankutayUcarIdentity.UI.ComplexTypes;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace CankutayUcarIdentity.UI.Controllers
@@ -57,16 +58,28 @@ namespace CankutayUcarIdentity.UI.Controllers
                     }
 
                     //_signInManager.SignOutAsync() sistemde bir cookie bilgisi var ve login olunmuşşsa cookie silinir sistemden çıkış yapılır
-                    await _signInManager.SignOutAsync();
+                    //await _signInManager.SignOutAsync();
 
 
                     //_signInManager.PasswordSignInAsync() email adresiyle bulunan userdaki hashli passwordu ve gelen vievmodeldeki paswordu hashleyerek kontrol eder ve beni hatırla seçeneğini kontrol eder ve sisteme girişin kilitli olup olmadığını kontrol eder
-                    Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, false);
+                    //Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, false);
 
-                    if (result.Succeeded)
+                    bool userCheck = await base._userManager.CheckPasswordAsync(user, loginViewModel.Password);
+
+                    if (userCheck)
                     {
                         await _userManager.ResetAccessFailedCountAsync(user);
-                        return RedirectToAction("Index", "Member");
+                        await _signInManager.SignOutAsync();
+                        Microsoft.AspNetCore.Identity.SignInResult result = await base._signInManager.PasswordSignInAsync(user, loginViewModel.Password,
+                            loginViewModel.RememberMe, false);
+                        if (result.RequiresTwoFactor)
+                        {
+                            return RedirectToAction("TwoFactorLogIn", "Home");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Member");
+                        }
                     }
                     else
                     {
@@ -87,6 +100,68 @@ namespace CankutayUcarIdentity.UI.Controllers
                 }
             }
             return View(loginViewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> TwoFactorLogIn()
+        {
+
+            AppUser user = await base._signInManager.GetTwoFactorAuthenticationUserAsync();
+
+            // GetTwoFactorAuthenticationUserAsync() metodu signinpassword ün twofactor authentication açıksa oluşturduğu userid cookisindeki user id ile veritabanındaki user i bulur geriye döner
+
+
+            switch ((TwoFactor)user.TwoFactor)
+            {
+                case TwoFactor.MicrosoftGoogle:
+
+                    break;
+            }
+            return View(new TwoFactorLogInViewModel()
+            {
+                TwoFactorType = (TwoFactor)user.TwoFactor,
+                VerificationCode = string.Empty,
+                isRecoveryCode = false,
+                isRememberMe = false
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> TwoFactorLogIn(TwoFactorLogInViewModel model)
+        {
+            AppUser user = await base._signInManager.GetTwoFactorAuthenticationUserAsync();
+            ModelState.Clear();
+            bool isSuccessAuthentication = false;
+            if ((TwoFactor)user.TwoFactor == TwoFactor.MicrosoftGoogle)
+            {
+                Microsoft.AspNetCore.Identity.SignInResult result = null;
+                if (model.isRecoveryCode)
+                {
+                    result = await base._signInManager.TwoFactorRecoveryCodeSignInAsync(model.VerificationCode);
+                }
+                else
+                {
+                    result = await base._signInManager.TwoFactorAuthenticatorSignInAsync(model.VerificationCode,
+                        model.isRememberMe, false);
+                }
+
+                if (result.Succeeded)
+                {
+                    isSuccessAuthentication = true;
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Doğrulama kodu yanlış");
+                }
+            }
+
+            if (isSuccessAuthentication)
+            {
+                return RedirectToAction("Index", "Member");
+            }
+
+            model.TwoFactorType = (TwoFactor)user.TwoFactor;
+            return View(model);
         }
 
         [HttpGet]
